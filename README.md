@@ -14,7 +14,7 @@ Place your logo/text/pattern in `sketch/`, open `sketch.pde` in [Processing](htt
 
 There are lots of parameters in the code to experiment around with. 
 
-The next step is to open `index.html` in the browser. The JS code will pick up the nodes/edges data from the generated file and do it's physics engine thing. I left various experimental code snippets outcommented in there for others to play around with.
+The next step is to open `index.html` in the browser. The JS code will pick up the nodes/edges data from the generated file and do it's physics engine thing. I left various experimental code snippets outcommented in there for others to play around with. You can also grab nodes and drag them around with the mouse - it might make sense for that to turn off the continous reheating of the simulation (`graph.d3ReheatSimulation()`), otherwise you can hardly catch a moving node 😃
 
 I haven't looked into how to control the physics engine more in a way to get a more directed kind of unfolding of the pattern. With the logo I did all this for, it went quite alright. It can happen though, that your logo unfolds akwardly bent or mirrored etc. You can change around on the pipeline by changing the dimensions of the input image or the grid size parameters etc., maybe in another configuration it unfolds more nicely readable.
 
