@@ -1,0 +1,102 @@
+<head>
+	<style> body { margin: 0; } </style>
+	<script src="js/force-graph.min.js"></script>
+    <!-- this is written by the Processing sketch: -->
+    <script src="js/generated-data.js"></script>
+</head>
+<body>
+	<div id="graph"></div>
+	<script>
+        let nodes = data.nodes;
+        let edges = data.edges;
+
+        // to use coordinates here, comment the export of x/y in Node.toJson() back in in the Processing code
+        let minX = Number.MAX_VALUE, maxX = 0, minY = Number.MAX_VALUE, maxY = 0;
+        let delta = 300; 
+        nodes.forEach(node => {
+            if (node.x < minX) minX = node.x;
+            if (node.x > maxX) maxX = node.x;
+            if (node.y < minY) minY = node.y;
+            if (node.y > maxY) maxY = node.y;
+            
+            // place them randomly between -1000 and 1000
+            // node.x = -1000 + Math.round(Math.random() * 2000);
+            // node.y = -1000 + Math.round(Math.random() * 2000);
+
+            // setting fx and fy to a value will freeze them there:
+            // node.fx = node.x;
+            // node.fy = node.y
+            
+            // if x/y is written out by Processing but you actually don't want it to be set:
+            // delete node.x;
+            // delete node.y;
+
+            // to dislocate them a bit randomly around their original location
+            // node.x = node.x + (-delta + Math.round(Math.random() * 2 * delta));
+            // node.y = node.y + (-delta + Math.round(Math.random() * 2 * delta));
+        });
+
+        console.log(minX, maxX, minY, maxY);
+
+        const graph = ForceGraph()
+        (document.getElementById('graph'))
+            .graphData({ nodes: nodes, links: edges })
+            .nodeLabel('')
+            .linkLabel('')
+            .linkColor(edge => edge.bothNodesInLogo ? 'blue' : 'silver')
+            .nodeColor(node => node.inLogo ? 'blue' : 'silver');
+            // .nodeVisibility(false)
+            // .nodeRelSize(6)
+            // .linkLineDash(edge => edge.bothNodesInLogo ? null : [5, 15])
+
+        // this keeps the unfolding going, otherwise it stops after some time without being fully unfolded
+        setInterval(() => {
+            graph.d3ReheatSimulation();
+        }, 200);
+
+        // to position the cursor in the center
+        window.addEventListener('mousemove', e => {
+            console.log(e.x, e.y, window.innerWidth / 2, window.innerHeight / 2);
+        });
+
+        // to resize the window for a desired screenrecording-size
+        window.addEventListener('resize', e => {
+            console.log(window.innerWidth, window.innerHeight);
+        }, true);
+
+        // various things I experimented with, left here for your own experimentations if useful :)
+        /*
+        let k = graph.zoom();
+        setInterval(() => {
+            // graph.zoom(k); k += 0.001;
+            graph.zoomToFit(400);
+        }, 100);
+
+        // graph.onEngineTick(() => graph.zoomToFit(400));
+        // graph.d3Force("center");
+        // graph.cooldownTime(15000 * 10)
+        // graph.d3VelocityDecay(0.4);
+        // setInterval(() => console.log(graph.getGraphBbox()), 3000);
+
+        let start = Date.now();
+        let initialCenter = { x: 0, y: 0 };
+        let initialZoom = 0.341995;
+        let targetCenter = { x: 242.71, y: -619.98 };
+        let targetZoom = 0.07802;
+        let targetMillis = 15000;
+        setInterval(() => {
+            let millisElapsed = Date.now() - start;
+            let progress = millisElapsed / targetMillis;
+            if (progress > 1) return;
+            
+            let centerProgress = { 
+                x: initialCenter.x + (targetCenter.x - initialCenter.x) * progress,
+                y: initialCenter.y + (targetCenter.y - initialCenter.y) * progress
+            };
+            let zoomProgress = initialZoom + (targetZoom - initialZoom) * progress;
+            graph.centerAt(centerProgress.x, centerProgress.y);
+            graph.zoom(zoomProgress);
+        }, 50);
+        */
+	</script>
+</body>
